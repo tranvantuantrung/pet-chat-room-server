@@ -12,7 +12,7 @@ Setup:
 npm install
 ```
 
-##Usage
+## Usage
 
 Run app:
 
