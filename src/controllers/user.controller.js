@@ -34,13 +34,13 @@ const removeUser = async ({ id, room }) => {
 
   if (roomMatched) {
     users = roomMatched.users;
-  }
 
-  const index = users.findIndex((user) => user.socketId === id);
+    const index = users.findIndex((user) => user.socketId === id);
 
-  if (index !== -1) {
-    roomMatched.save();
-    return users.splice(index, 1)[0];
+    if (index !== -1) {
+      roomMatched.save();
+      return users.splice(index, 1)[0];
+    }
   }
 };
 

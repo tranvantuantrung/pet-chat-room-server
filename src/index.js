@@ -33,9 +33,14 @@ app.use(cors());
 
 //socket handle
 io.on("connection", (socket) => {
+  let userRoom;
+
   socket.on("join", async ({ name, room }, cb) => {
+    userRoom = room;
+
     const { err, newUser } = await addUser({ id: socket.id, name, room });
     const messages = await getMessages({ room });
+
     if (err) return cb(err);
 
     socket.join(newUser.room);
@@ -85,8 +90,8 @@ io.on("connection", (socket) => {
     const user = await removeUser({ id: socket.id, room });
 
     if (user) {
-      io.to(user.room).emit("message", {
-        username: "Admin",
+      io.to(room).emit("message", {
+        username: "admin",
         text: `${user.username} has left :(`
       });
 
@@ -95,29 +100,29 @@ io.on("connection", (socket) => {
         message: { username: "admin", text: `${user.username} has left :(` }
       });
 
-      io.to(user.room).emit("roomData", {
-        room: user.room,
+      io.to(room).emit("roomData", {
+        room: room,
         users: getUsersInRoom()
       });
     }
   });
 
-  socket.on("disconnect", async ({ room }) => {
-    const user = await removeUser({ id: socket.id, room });
+  socket.on("disconnect", async () => {
+    const user = await removeUser({ id: socket.id, room: userRoom });
 
     if (user) {
-      io.to(user.room).emit("message", {
-        username: "Admin",
-        text: `${user.username} has left.`
+      io.to(userRoom).emit("message", {
+        username: "admin",
+        text: `${user.username} has left :(`
       });
 
       updateMessages({
-        room,
+        userRoom,
         message: { username: "admin", text: `${user.username} has left :(` }
       });
 
-      io.to(user.room).emit("roomData", {
-        room: user.room,
+      io.to(userRoom).emit("roomData", {
+        room: userRoom,
         users: getUsersInRoom()
       });
     }

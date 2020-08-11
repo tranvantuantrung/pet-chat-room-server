@@ -14,13 +14,15 @@ const updateMessages = async ({ room, message }) => {
   const { username, text } = message;
   let roomMatched = await Room.findOne({ room });
 
-  messages = roomMatched.messages;
+  if (roomMatched) {
+    messages = roomMatched.messages;
 
-  messages.push({ username, text });
+    messages.push({ username, text });
 
-  roomMatched.save();
+    roomMatched.save();
 
-  return messages;
+    return messages;
+  }
 };
 
 module.exports = { updateMessages, getMessages };
