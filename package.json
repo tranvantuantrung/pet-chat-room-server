@@ -1,10 +1,10 @@
 {
-  "name": "chat-room-server",
+  "name": "pet-chat-room-server",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "cors": "2.8.5",
